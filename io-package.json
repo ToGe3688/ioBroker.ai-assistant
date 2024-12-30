@@ -1,0 +1,200 @@
+{
+	"common": {
+		"name": "ai-assistant",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"uk": "Початкова версія",
+				"zh-cn": "首次出版"
+			}
+		},
+		"titleLang": {
+			"en": "AI Assistant",
+			"de": "KI-Assistent",
+			"ru": "ИИ-помощник",
+			"pt": "Assistente de IA",
+			"nl": "AI-assistent",
+			"fr": "Assistant IA",
+			"it": "Assistente AI",
+			"es": "Asistente de IA",
+			"pl": "Asystent AI",
+			"uk": "ШІ помічник",
+			"zh-cn": "人工智能助手"
+		},
+		"desc": {
+			"en": "AI Assistant adapter allows you to control your ioBroker trought artifical intelligence based on LLMs",
+			"de": "Mit dem AI Assistant-Adapter können Sie Ihren ioBroker mithilfe künstlicher Intelligenz auf Basis von LLMs steuern",
+			"ru": "Адаптер AI Assistant позволяет вам управлять вашим ioBroker с помощью искусственного интеллекта на основе LLM.",
+			"pt": "O adaptador AI Assistant permite que você controle seu ioBroker através de inteligência artificial baseada em LLMs",
+			"nl": "Met de AI Assistant-adapter kunt u uw ioBroker besturen via kunstmatige intelligentie op basis van LLM's",
+			"fr": "L'adaptateur AI Assistant vous permet de contrôler votre ioBroker grâce à l'intelligence artificielle basée sur les LLM",
+			"it": "L'adattatore AI Assistant ti consente di controllare il tuo ioBroker tramite l'intelligenza artificiale basata su LLM",
+			"es": "El adaptador AI Assistant le permite controlar su ioBroker a través de inteligencia artificial basada en LLM",
+			"pl": "Adapter AI Assistant pozwala kontrolować ioBrokera poprzez sztuczną inteligencję opartą na LLM",
+			"uk": "Адаптер AI Assistant дозволяє вам керувати вашим ioBroker за допомогою штучного інтелекту на основі LLMs",
+			"zh-cn": "AI Assistant 适配器允许您通过基于 LLM 的人工智能来控制您的 ioBroker"
+		},
+		"authors": [
+			"ToGe3688 <toge3688@gmail.com>"
+		],
+		"keywords": [
+			"iobroker",
+			"ai",
+			"chatgpt",
+			"assistant"
+		],
+		"licenseInformation": {
+			"type": "free",
+			"license": "MIT"
+		},
+		"platform": "Javascript/Node.js",
+		"icon": "ai-assistant.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/ToGe3688/ioBroker.ai-assistant/main/admin/ai-assistant.png",
+		"readme": "https://github.com/ToGe3688/ioBroker.ai-assistant/blob/main/README.md",
+		"loglevel": "info",
+		"tier": 3,
+		"mode": "daemon",
+		"type": "messaging",
+		"compact": true,
+		"connectionType": "cloud",
+		"dataSource": "push",
+		"messagebox": true,
+		"supportedMessages": {
+			"custom": true,
+			"notifications": true
+		},
+		"adminUI": {
+			"config": "json"
+		},
+		"dependencies": [
+			{
+				"js-controller": ">=6.0.11"
+			}
+		],
+		"globalDependencies": [
+			{
+				"admin": ">=6.1.0"
+			}
+		]
+	},
+	"native": {
+		"assistant_model": "openai/gpt-4o-mini",
+		"chat_history": 6,
+		"max_tokens": 6000,
+		"temperature": 0.6,
+		"max_retries": 3,
+		"retry_delay": 15,
+		"assistant_name": "Ion",
+		"assistant_personality": "friendly and helpful",
+		"assistant_language": "en",
+		"assistant_debug_output": false,
+		"anth_models": [
+			{
+				"model_active": true,
+				"model_name": "claude-3-5-sonnet-latest"
+			},
+			{
+				"model_active": true,
+				"model_name": "claude-3-5-haiku-latest"
+			},
+			{
+				"model_active": true,
+				"model_name": "claude-3-opus-latest"
+			}
+		],
+		"opai_models": [
+			{
+				"model_active": true,
+				"model_name": "gpt-4o"
+			},
+			{
+				"model_active": true,
+				"model_name": "gpt-4o-mini"
+			},
+			{
+				"model_active": true,
+				"model_name": "gpt-4-turbo"
+			},
+			{
+				"model_active": true,
+				"model_name": "gpt-4"
+			},
+			{
+				"model_active": true,
+				"model_name": "gpt-3.5-turbo"
+			},
+			{
+				"model_active": true,
+				"model_name": "o1-mini"
+			}
+		],
+		"custom_models": [
+		],
+		"pplx_models": [
+			{
+				"model_active": true,
+				"model_name": "llama-3.1-sonar-small-128k-online"
+			},
+			{
+				"model_active": true,
+				"model_name": "llama-3.1-sonar-large-128k-online"
+			},
+			{
+				"model_active": true,
+				"model_name": "llama-3.1-sonar-huge-128k-online"
+			}
+		],
+		"oprt_models": [
+			{
+				"model_active": true,
+				"model_name": "openai/gpt-4o-mini"
+			},
+			{
+				"model_active": true,
+				"model_name": "meta-llama/llama-3.3-70b-instruct"
+			},
+			{
+				"model_active": true,
+				"model_name": "deepseek/deepseek-chat"
+			},
+			{
+				"model_active": true,
+				"model_name": "x-ai/grok-beta"
+			},
+			{
+				"model_active": true,
+				"model_name": "anthropic/claude-3.5-sonnet"
+			},
+			{
+				"model_active": true,
+				"model_name": "perplexity/llama-3.1-sonar-huge-128k-online"
+			}
+		]
+	},
+	"protectedNative": [
+		"anth_api_token",
+		"opai_api_token",
+		"pplx_api_token",
+		"oprt_api_token",
+		"custom_api_token"
+	],
+	"encryptedNative": [
+		"anth_api_token",
+		"opai_api_token",
+		"pplx_api_token",
+		"oprt_api_token",
+		"custom_api_token"
+	],
+	"objects": [],
+	"instanceObjects": []
+}
