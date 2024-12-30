@@ -22,7 +22,7 @@
         },
         "assistant_name": {
           "type": "text",
-          "xs": 6,
+          "xs": 12,
           "sm": 6,
           "md": 6,
           "lg": 6,
@@ -33,7 +33,7 @@
           "maxLength": 15
         },
         "assistant_model": {
-          "xs": 6,
+          "xs": 12,
           "sm": 6,
           "md": 6,
           "lg": 6,
@@ -46,7 +46,7 @@
         },
         "assistant_personality": {
           "type": "text",
-          "xs": 9,
+          "xs": 12,
           "sm": 9,
           "md": 9,
           "lg": 9,
@@ -57,7 +57,7 @@
         },
         "assistant_language": {
           "type": "select",
-          "xs": 3,
+          "xs": 12,
           "sm": 3,
           "md": 3,
           "lg": 3,

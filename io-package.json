@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "ai-assistant",
-		"version": "0.0.1",
+		"version": "0.0.2",
 		"news": {
+			"0.0.2": {
+				"en": "Bug fixes",
+				"de": "Bugfixing"
+			},
 			"0.0.1": {
 				"en": "initial release",
 				"de": "Erstveröffentlichung",
