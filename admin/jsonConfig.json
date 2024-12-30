@@ -13,7 +13,12 @@
         },
         "assistant_description": {
           "type": "staticText",
-          "text": "Give your personal assistant a name and describe its personality. Choose a model that should be used for your assistant."
+          "text": "Give your personal assistant a name and describe its personality. Choose a model that should be used for your assistant.",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "assistant_name": {
           "type": "text",
@@ -89,7 +94,12 @@
         },
         "assistant_parameters_description": {
           "type": "staticText",
-          "text": "Select how many messages should be included for context retention. Temperature defines creativity/randomness of output from 0-1 where 0 is the most predictable output. Set how many tokens should be generated max for assistant responses."
+          "text": "Select how many messages should be included for context retention. Temperature defines creativity/randomness of output from 0-1 where 0 is the most predictable output. Set how many tokens should be generated max for assistant responses.",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "chat_history": {
           "type": "number",
@@ -140,7 +150,12 @@
         },
         "assistant_request_description": {
           "type": "staticText",
-          "text": "Select if failed requests to the assistant should be retried and how long to wait between tries."
+          "text": "Select if failed requests to the assistant should be retried and how long to wait between tries.",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "max_retries": {
           "type": "number",
