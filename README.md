@@ -213,6 +213,8 @@ Set the log level to `debug` in the ioBroker admin interface for detailed logs.
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### 0.0.2 (2024-30-12)
+* (@ToGe3688) Fixed Bug in OpenAI Provider
 
 ### 0.0.1 (2024-30-12)
 * (@ToGe3688) initial release
