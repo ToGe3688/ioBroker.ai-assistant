@@ -47,10 +47,11 @@ The following models have been tested with the adapter and are known to work wel
 
 - Claude 3.5 Sonnet (Anthropic)
 - gpt-4o-mini (OpenAI)
-- meta-llama/llama-3.3-70b-instruct
-- deepseek/deepseek-chat
-- x-ai/grok-beta
-- perplexity/llama-3.1-sonar-huge-128k-online
+- meta-llama/llama-3.3-70b-instruct (OpenRouter)
+- deepseek/deepseek-chat (OpenRouter)
+- x-ai/grok-beta (OpenRouter)
+- perplexity/llama-3.1-sonar-huge-128k-online (Perplexity)
+- perplexity/llama-3.1-sonar-large-128k-online (Perplexity)
 
 ---
 
@@ -213,6 +214,10 @@ Set the log level to `debug` in the ioBroker admin interface for detailed logs.
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### 0.0.3 (2024-31-12)
+* (@ToGe3688) Improved handling of malformed model responses
+* (@ToGe3688) Fixed a bug where the names of the states were not provided to the assistant
+
 ### 0.0.2 (2024-30-12)
 * (@ToGe3688) Fixed Bug in OpenAI Provider
 

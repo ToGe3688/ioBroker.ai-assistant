@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "ai-assistant",
-		"version": "0.0.2",
+		"version": "0.0.3",
 		"news": {
+			"0.0.3": {
+				"en": "Improved handling of malformed model responses",
+				"de": "Verbesserte Behandlung von falschen Modellantworten"
+			},
 			"0.0.2": {
 				"en": "Bug fixes",
 				"de": "Bugfixing"

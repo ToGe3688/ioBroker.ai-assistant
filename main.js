@@ -51,6 +51,8 @@ class AiAssistant extends utils.Adapter {
 		this.scheduler = new SchedulerTool(this);
 		this.trigger = new TriggerTool(this);
 
+		this.log.debug(await this.getAvailableEndpointsStructure());
+
 		const models = await this.getAvailableModels();
 		if (models.length == 0) {
 			this.log.error("No Models set, cant start adapter!");
@@ -533,7 +535,7 @@ class AiAssistant extends utils.Adapter {
 	 * @param {number} tries - The number of tries for the request.
 	 * @param {boolean} try_only_once - If true, the request will only be tried once.
 	 */
-	async startAssistantRequest(text, tries = 0, try_only_once = false) {
+	async startAssistantRequest(text, tries = 0, try_only_once = false, functionResponse = false) {
 
 		this.log.info("Starting request for Assistant with text: " + text);
 		if (tries == 1) {
@@ -564,11 +566,18 @@ class AiAssistant extends utils.Adapter {
 				messages.push({ role: "assistant", content: message.assistant });
 			}
 
-			const textMessage = `
-			     ${I18n.translate("assistant_current_time")} ${new Date().toLocaleString()}
-				 Output Language: ${this.config.assistant_language}
-				 ${I18n.translate("assistant_message_from_user")} ${text}
-			`;
+			let textMessage = text;
+			if (!functionResponse) {
+				this.log.debug("Adding user message to request array: " + textMessage);
+				textMessage = `
+					 ${I18n.translate("assistant_current_time")} ${new Date().toLocaleString()}
+					 ${I18n.translate("assistant_output_language")} ${this.config.assistant_language}
+					 ${I18n.translate("assistant_message_from_user")} ${text}
+				`;
+			} else {
+				this.log.debug("Adding function response to request array: " + textMessage);
+			}
+
 			this.log.debug("Adding user message to request array: " + textMessage);
 			messages.push({ role: "user", content: textMessage });
 
@@ -587,9 +596,26 @@ class AiAssistant extends utils.Adapter {
 				await this.setStateAsync("Assistant.request.body", { val: JSON.stringify(modelResponse.requestData), ack: true });
 				await this.setStateAsync("Assistant.response.error", { val: "", ack: true });
 				await this.setStateAsync("Assistant.response.raw", { val: JSON.stringify(modelResponse.responseData), ack: true });
-				modelResponse.text = modelResponse.text.replace(/(\r\n|\n|\r|\t)/gm, "");
-				this.log.debug("Assistant response: " + modelResponse.text);
-				this.handleAssistantResponse(modelResponse.text);
+				if (modelResponse.text && modelResponse.text.trim() != "") {
+					modelResponse.text = modelResponse.text.replace(/(\r\n|\n|\r|\t)/gm, "");
+					this.log.debug("Assistant response: " + modelResponse.text);
+					try {
+						this.handleAssistantResponse(modelResponse.text);
+					} catch (error) {
+						this.log.error("Error handling Assistant response: " + error);
+						await this.setStateAsync("Assistant.request.state", { val: "error", ack: true });
+						await this.setStateAsync("Assistant.request.body", { val: JSON.stringify(modelResponse.requestData), ack: true });
+						await this.setStateAsync("Assistant.response.error", { val: error, ack: true });
+						await this.setStateAsync("Assistant.response.raw", { val: JSON.stringify(modelResponse.responseData), ack: true });
+					}
+				} else {
+					this.log.warn("Assistant response text is empty, cant handle response!");
+					await this.setStateAsync("Assistant.request.state", { val: "error", ack: true });
+					await this.setStateAsync("Assistant.request.body", { val: JSON.stringify(modelResponse.requestData), ack: true });
+					await this.setStateAsync("Assistant.response.error", { val: "Malformed model answer or missing text response", ack: true });
+					await this.setStateAsync("Assistant.response.raw", { val: JSON.stringify(modelResponse.responseData), ack: true });
+					requestCompleted = false;
+				}
 			}
 
 			if (!requestCompleted) {
@@ -604,9 +630,15 @@ class AiAssistant extends utils.Adapter {
 					this.log.debug("Try " + tries+1 + "/" + this.config.max_retries + " of request for Assistant failed Text: " + text);
 					tries = tries + 1;
 					this.log.debug("Retry request for Assistant in " + this.config.retry_delay + " seconds Text: " + text);
-					this.timeouts.push(setTimeout((text, tries) => {
-						this.startAssistantRequest(text, tries);
-					}, retry_delay, text, tries));
+					const timeoutConfig = {
+						text: text,
+						tries: tries,
+						try_only_once: try_only_once,
+						functionResponse: functionResponse
+					};
+					this.timeouts.push(setTimeout((timeoutConfig) => {
+						this.startAssistantRequest(timeoutConfig.text, timeoutConfig.tries, timeoutConfig.try_only_once, timeoutConfig.functionResponse);
+					}, retry_delay, timeoutConfig));
 				} else {
 					this.log.error("Request for Assistant failed after " + this.config.max_retries + " tries Text: " + text);
 					await this.setStateAsync("Assistant.request.state", { val: "failed", ack: true });
@@ -895,7 +927,7 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
 						await this.setStateAsync("Assistant.text_response", { val: debugOutput, ack: true });
 					}
 					delete functionResponse.reasoning;
-					this.startAssistantRequest(JSON.stringify(functionResponse));
+					this.startAssistantRequest(JSON.stringify(functionResponse), 0, false, true);
 				}
 			} else {
 
@@ -1229,7 +1261,7 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
 				if (stateObject.type != "state") continue;
 
 				const tempObject = {
-					name: stateObject.common.name,
+					name: endpoint.name,
 					id: endpoint.objId,
 					type: stateObject.common.type
 				};

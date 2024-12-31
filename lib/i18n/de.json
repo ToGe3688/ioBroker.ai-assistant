@@ -17,6 +17,8 @@
 
   "assistant_current_time": "Aktuelle Systemzeit:",
 
+  "assistant_output_language": "Ausgabesprache:",
+
   "assistant_message_from_user": "Eingegangene Benutzeranfrage:",
 
   "assistant_function_call": "Gewählte Funktion für die Ausführung",
