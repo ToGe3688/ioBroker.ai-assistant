@@ -21,7 +21,7 @@ const TriggerTool = require("./lib/tools/trigger-tool");
 
 class AiAssistant extends utils.Adapter {
     /**
-     * @param [options]
+     * @param [options] - The options for the adapter instance.
      */
     constructor(options) {
         super({
@@ -1484,7 +1484,7 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
 if (require.main !== module) {
     // Export the constructor in compact mode
     /**
-     * @param {object} options
+     * @param options - The options for the assistant.
      */
     module.exports = options => new AiAssistant(options);
 } else {
