@@ -214,6 +214,9 @@ Set the log level to `debug` in the ioBroker admin interface for detailed logs.
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### 0.1.0 (2025-04-01)
+* (@ToGe3688) Beta Release
+
 ### 0.0.3 (2024-31-12)
 * (@ToGe3688) Improved handling of malformed model responses
 * (@ToGe3688) Fixed a bug where the names of the states were not provided to the assistant
