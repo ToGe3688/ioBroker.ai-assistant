@@ -5,15 +5,42 @@
         "news": {
             "0.1.0": {
                 "en": "Beta Release",
-                "de": "Beta Veröffentlichung"
+                "de": "Beta Veröffentlichung",
+                "ru": "Бета-версия",
+                "pt": "Versão beta",
+                "nl": "Bèta-release",
+                "fr": "Version bêta",
+                "it": "Versione beta",
+                "es": "Lanzamiento beta",
+                "pl": "Wersja beta",
+                "uk": "Бета-версія",
+                "zh-cn": "测试版"
             },
             "0.0.3": {
                 "en": "Improved handling of malformed model responses",
-                "de": "Verbesserte Behandlung von falschen Modellantworten"
+                "de": "Verbesserte Behandlung von falschen Modellantworten",
+                "ru": "Улучшена обработка неверных ответов модели.",
+                "pt": "Tratamento aprimorado de respostas de modelos malformados",
+                "nl": "Verbeterde verwerking van verkeerd opgemaakte modelreacties",
+                "fr": "Gestion améliorée des réponses de modèle mal formées",
+                "it": "Gestione migliorata delle risposte del modello non valide",
+                "es": "Manejo mejorado de respuestas de modelos mal formados.",
+                "pl": "Poprawiona obsługa zniekształconych odpowiedzi modelu",
+                "uk": "Покращена обробка неправильно сформованих відповідей моделі",
+                "zh-cn": "改进了对格式错误的模型响应的处理"
             },
             "0.0.2": {
                 "en": "Bug fixes",
-                "de": "Bugfixing"
+                "de": "Bugfixing",
+                "ru": "Исправления ошибок",
+                "pt": "Correções de bugs",
+                "nl": "Bugfixes",
+                "fr": "Corrections de bugs",
+                "it": "Correzioni di bug",
+                "es": "Corrección de errores",
+                "pl": "Poprawki błędów",
+                "uk": "Виправлення помилок",
+                "zh-cn": "错误修复"
             },
             "0.0.1": {
                 "en": "initial release",
@@ -55,8 +82,20 @@
             "uk": "Адаптер AI Assistant дозволяє вам керувати вашим ioBroker за допомогою штучного інтелекту на основі LLMs",
             "zh-cn": "AI Assistant 适配器允许您通过基于 LLM 的人工智能来控制您的 ioBroker"
         },
-        "authors": ["ToGe3688 <toge3688@gmail.com>"],
-        "keywords": ["chatgpt", "assistant", "openai", "anthropic", "openrouter", "perplexity", "bot", "AI", "KI"],
+        "authors": [
+            "ToGe3688 <toge3688@gmail.com>"
+        ],
+        "keywords": [
+            "chatgpt",
+            "assistant",
+            "openai",
+            "anthropic",
+            "openrouter",
+            "perplexity",
+            "bot",
+            "AI",
+            "KI"
+        ],
         "licenseInformation": {
             "type": "free",
             "license": "MIT"
@@ -185,8 +224,20 @@
             }
         ]
     },
-    "protectedNative": ["anth_api_token", "opai_api_token", "pplx_api_token", "oprt_api_token", "custom_api_token"],
-    "encryptedNative": ["anth_api_token", "opai_api_token", "pplx_api_token", "oprt_api_token", "custom_api_token"],
+    "protectedNative": [
+        "anth_api_token",
+        "opai_api_token",
+        "pplx_api_token",
+        "oprt_api_token",
+        "custom_api_token"
+    ],
+    "encryptedNative": [
+        "anth_api_token",
+        "opai_api_token",
+        "pplx_api_token",
+        "oprt_api_token",
+        "custom_api_token"
+    ],
     "objects": [],
     "instanceObjects": []
 }
