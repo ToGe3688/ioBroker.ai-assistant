@@ -56,7 +56,7 @@
             "zh-cn": "AI Assistant 适配器允许您通过基于 LLM 的人工智能来控制您的 ioBroker"
         },
         "authors": ["ToGe3688 <toge3688@gmail.com>"],
-        "keywords": ["iobroker", "ai", "chatgpt", "assistant"],
+        "keywords": ["chatgpt", "assistant", "openai", "anthropic", "openrouter", "perplexity", "bot", "AI", "KI"],
         "licenseInformation": {
             "type": "free",
             "license": "MIT"

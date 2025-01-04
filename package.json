@@ -13,12 +13,17 @@
     ],
     "homepage": "https://github.com/ToGe3688/ioBroker.ai-assistant",
     "license": "MIT",
-    "keywords": [
-        "iobroker",
-        "ai",
-        "chatgpt",
-        "assistant"
-    ],
+  "keywords": [
+    "ioBroker",
+    "ai",
+    "ki",
+    "chatgpt",
+    "assistant",
+    "openai",
+    "anthropic",
+    "openrouter",
+    "perplexity"
+  ],
     "repository": {
         "type": "git",
         "url": "https://github.com/ToGe3688/ioBroker.ai-assistant.git"
