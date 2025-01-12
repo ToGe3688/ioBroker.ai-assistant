@@ -1,10 +1,33 @@
 {
     "common": {
         "name": "ai-assistant",
-        "version": "0.1.1",
+        "version": "0.1.2",
         "news": {
+            "0.1.2": {
+                "en": "Anthropic API Versioning",
+                "de": "Anthropic API-Versionierung",
+                "ru": "Антропное управление версиями API",
+                "pt": "Versionamento da API Antrópica",
+                "nl": "Antropische API-versiebeheer",
+                "fr": "Gestion des versions de l'API Anthropic",
+                "it": "Versioning API antropico",
+                "es": "Versiones API antrópicas",
+                "pl": "Wersjonowanie API Anthropic",
+                "uk": "Версії антропного API",
+                "zh-cn": "人为 API 版本控制"
+            },
             "0.1.1": {
-                "en": "Better error handling for Provider APIs"
+                "en": "Better error handling for Provider APIs",
+                "de": "Bessere Fehlerbehandlung für Provider-APIs",
+                "ru": "Улучшенная обработка ошибок для API-интерфейсов поставщиков.",
+                "pt": "Melhor tratamento de erros para APIs de provedores",
+                "nl": "Betere foutafhandeling voor Provider-API's",
+                "fr": "Meilleure gestion des erreurs pour les API du fournisseur",
+                "it": "Migliore gestione degli errori per le API del provider",
+                "es": "Mejor manejo de errores para las API de proveedores",
+                "pl": "Lepsza obsługa błędów w interfejsach API dostawcy",
+                "uk": "Покращена обробка помилок для API постачальників",
+                "zh-cn": "更好地处理提供者 API 的错误"
             },
             "0.1.0": {
                 "en": "Beta Release",

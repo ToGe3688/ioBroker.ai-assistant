@@ -1371,6 +1371,7 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
                 const enumMember = await this.getForeignObjectAsync(member);
                 if (enumMember) {
                     if (enumMember.type != "state") {
+                        this.log.debug(`Skipping non-state object: ${member}`);
                         continue;
                     }
 
