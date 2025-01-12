@@ -224,6 +224,9 @@ Set the log level to `debug` in the ioBroker admin interface for detailed logs.
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### 0.1.2 (2025-12-01)
+- (@ToGe3688) Better error handling for Provider APIs
+- (@ToGe3688) Anthropic API Versioning
 
 ### 0.1.1 (2025-12-01)
 
