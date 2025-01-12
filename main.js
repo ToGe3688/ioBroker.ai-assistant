@@ -534,7 +534,7 @@ class AiAssistant extends utils.Adapter {
      * @param try_only_once - If true, the request will only be tried once.
      * @param functionResponse - If true, the request will be started as function response.
      */
-    async startAssistantRequest(text, tries = 0, try_only_once = false, functionResponse = false) {
+    async startAssistantRequest(text, tries = 1, try_only_once = false, functionResponse = false) {
         this.log.info(`Starting request for Assistant with text: ${text}`);
         if (tries == 1) {
             await this.setStateAsync("Assistant.request.state", { val: "start", ack: true });
@@ -648,10 +648,10 @@ class AiAssistant extends utils.Adapter {
             }
 
             if (!requestCompleted) {
-                if (!this.config.retry_delay) {
+                if (typeof this.config.retry_delay == "undefined" || this.config.retry_delay == null) {
                     this.config.retry_delay = 15;
                 }
-                if (!this.config.max_retries) {
+                if (typeof this.config.max_retries == "undefined" || this.config.max_retries == null) {
                     this.config.max_retries = 3;
                 }
                 await this.setStateAsync("Assistant.request.state", { val: "retry", ack: true });
@@ -661,7 +661,7 @@ class AiAssistant extends utils.Adapter {
                         retry_delay = 0;
                     }
                     this.log.debug(
-                        `Try ${tries}${1}/${this.config.max_retries} of request for Assistant failed Text: ${text}`,
+                        `Try ${tries}/${this.config.max_retries} of request for Assistant failed Text: ${text}`,
                     );
                     tries = tries + 1;
                     this.log.debug(`Retry request for Assistant in ${this.config.retry_delay} seconds Text: ${text}`);
@@ -672,7 +672,7 @@ class AiAssistant extends utils.Adapter {
                         functionResponse: functionResponse,
                     };
                     this.timeouts.push(
-                        setTimeout(
+                        this.setTimeout(
                             timeoutConfig => {
                                 this.startAssistantRequest(
                                     timeoutConfig.text,
@@ -686,7 +686,7 @@ class AiAssistant extends utils.Adapter {
                         ),
                     );
                 } else {
-                    this.log.error(`Request for Assistant failed after ${this.config.max_retries} tries Text: ${text}`);
+                    this.log.error(`Request for Assistant failed after ${tries} tries Text: ${text}`);
                     await this.setStateAsync("Assistant.request.state", { val: "failed", ack: true });
                     return false;
                 }

@@ -386,6 +386,16 @@
                     "lg": 4,
                     "xl": 4
                 },
+                "anth_api_version": {
+                "type": "text",
+                "label": "Anthropic API Version",
+                "default": "2023-06-01",
+                "xs": 12,
+                "sm": 12,
+                "md": 6,
+                "lg": 4,
+                "xl": 4
+                },
                 "model_name_unique_error": {
                     "type": "staticText",
                     "text": "ERROR: column 'Model' must contain unique text",

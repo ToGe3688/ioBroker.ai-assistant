@@ -1,8 +1,11 @@
 {
     "common": {
         "name": "ai-assistant",
-        "version": "0.1.0",
+        "version": "0.1.1",
         "news": {
+            "0.1.1": {
+                "en": "Better error handling for Provider APIs"
+            },
             "0.1.0": {
                 "en": "Beta Release",
                 "de": "Beta Veröffentlichung",
@@ -142,6 +145,7 @@
         "assistant_personality": "friendly and helpful",
         "assistant_language": "en",
         "assistant_debug_output": false,
+        "anth_api_version": "2023-06-01",
         "anth_models": [
             {
                 "model_active": true,

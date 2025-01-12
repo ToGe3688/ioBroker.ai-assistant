@@ -83,7 +83,9 @@ Setup your assistant with the following settings:
 
 ### WARNING: Be careful with the states you give the assistant access to, as it can read and write to all states it has access to.
 
-Setup the ioBrokers objects and states the assistant should have access to:
+Setup the ioBrokers objects and states the assistant should have access to. 
+
+**NOTE: When importing or adding objects please make sure to only add datapoints with the type "state" that can be directly controlled or contains a value to be read!**
 
 | **Setting**                | **Description**                                                                                           |
 | -------------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -222,6 +224,10 @@ Set the log level to `debug` in the ioBroker admin interface for detailed logs.
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### 0.1.1 (2025-12-01)
+
+- (@ToGe3688) Better error handling for Provider APIs
 
 ### 0.1.0 (2025-04-01)
 
