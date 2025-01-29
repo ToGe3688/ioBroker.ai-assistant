@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "ai-assistant",
-        "version": "0.1.2",
+        "version": "0.1.3",
         "news": {
+            "0.1.3": {
+                "en": "Added Deepseek as api provider. Better model view in admin config.",
+                "de": "Deepseek als API -Anbieter hinzugefügt. Bessere Modellansicht in Admin -Konfiguration.",
+                "ru": "Добавлен DeepSeek в качестве поставщика API. Лучший вид модели в конфигурации администратора.",
+                "pt": "Adicionado Deepseek como provedor de API. Melhor visualização do modelo na configuração do administrador.",
+                "nl": "Deepseek toegevoegd als API -provider. Betere modelweergave in admin -configuratie.",
+                "fr": "A ajouté Deepseek en tant que fournisseur d'API. Meilleure vue de modèle dans la configuration administrative.",
+                "it": "Aggiunto DeepSeek come fornitore API. Migliore vista modello nella configurazione di amministrazione.",
+                "es": "Se agregó Deepseek como proveedor de API. Mejor vista del modelo en la configuración de administración.",
+                "pl": "Dodano DeepSeek jako dostawca API. Lepszy widok modelu w konfiguracji administratora.",
+                "uk": "Додано DeepSeek як постачальник API. Кращий перегляд моделі в конфігурації адміністратора.",
+                "zh-cn": "添加了DeepSeek作为API提供商。 admin配置中的更好模型视图。"
+            },
             "0.1.2": {
                 "en": "Anthropic API Versioning",
                 "de": "Anthropic API-Versionierung",
@@ -249,7 +262,19 @@
                 "model_active": true,
                 "model_name": "perplexity/llama-3.1-sonar-huge-128k-online"
             }
-        ]
+        ],
+        "deep_models": [
+            {
+                "model_active": true,
+                "model_name": "deepseek-chat"
+            },
+            {
+                "model_active": true,
+                "model_name": "deepseek-reasoner"
+            }
+        ],
+        "available_functions": [],
+        "available_endpoints": []
     },
     "protectedNative": [
         "anth_api_token",

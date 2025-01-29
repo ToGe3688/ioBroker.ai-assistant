@@ -12,6 +12,7 @@ const AnthropicAiProvider = require("./lib/providers/anthropic-ai-provider");
 const OpenAiProvider = require("./lib/providers/openai-ai-provider");
 const PerplexityAiProvider = require("./lib/providers/perplexity-ai-provider");
 const OpenRouterAiProvider = require("./lib/providers/openrouter-ai-provider");
+const DeepseekAiProvider = require("./lib/providers/deepseek-ai-provider");
 const CustomAiProvider = require("./lib/providers/custom-ai-provider");
 
 // Tools
@@ -80,7 +81,7 @@ class AiAssistant extends utils.Adapter {
 
         // Create Models and Assistant objects
         await this.setObjectAsync("Models", {
-            type: "device",
+            type: "folder",
             common: {
                 name: "AI Models",
                 desc: "Statistics and Data for used AI Models",
@@ -89,7 +90,7 @@ class AiAssistant extends utils.Adapter {
         });
 
         await this.setObjectAsync("Assistant", {
-            type: "device",
+            type: "folder",
             common: {
                 name: "Assistant",
                 desc: "Interact with your Assistant",
@@ -98,7 +99,7 @@ class AiAssistant extends utils.Adapter {
         });
 
         await this.setObjectAsync("Cronjobs", {
-            type: "device",
+            type: "folder",
             common: {
                 name: "Cronjobs",
                 desc: "Cronjobs created by Assistant",
@@ -107,7 +108,7 @@ class AiAssistant extends utils.Adapter {
         });
 
         await this.setObjectAsync("Triggers", {
-            type: "device",
+            type: "folder",
             common: {
                 name: "Triggers",
                 desc: "Triggers created by Assistant",
@@ -122,7 +123,7 @@ class AiAssistant extends utils.Adapter {
             this.log.debug(`Initializing objects for model: ${model}`);
 
             await this.setObjectAsync(`Models.${model}`, {
-                type: "device",
+                type: "folder",
                 common: {
                     name: model,
                     desc: `Model ${modelName} for the AI Assistant`,
@@ -131,7 +132,7 @@ class AiAssistant extends utils.Adapter {
             });
 
             await this.setObjectAsync(`Models.${model}.statistics`, {
-                type: "device",
+                type: "folder",
                 common: {
                     name: "Statistics",
                     desc: `Statistics for the model ${modelName} like requests count, tokens used, etc.`,
@@ -140,7 +141,7 @@ class AiAssistant extends utils.Adapter {
             });
 
             await this.setObjectAsync(`Models.${model}.response`, {
-                type: "device",
+                type: "folder",
                 common: {
                     name: "Response data",
                     desc: `Response data for the model ${modelName} like raw response, error response, etc.`,
@@ -149,7 +150,7 @@ class AiAssistant extends utils.Adapter {
             });
 
             await this.setObjectAsync(`Models.${model}.request`, {
-                type: "device",
+                type: "folder",
                 common: {
                     name: "Request data",
                     desc: `Request data for the model ${modelName} like request body, state, etc.`,
@@ -163,7 +164,7 @@ class AiAssistant extends utils.Adapter {
                     name: "Request state",
                     desc: "State for the running inference request",
                     type: "string",
-                    role: "indicator",
+                    role: "text",
                     read: true,
                     write: false,
                     def: "",
@@ -177,7 +178,7 @@ class AiAssistant extends utils.Adapter {
                     name: "Request body",
                     desc: "Sent body for the running inference request",
                     type: "string",
-                    role: "indicator",
+                    role: "json",
                     read: true,
                     write: false,
                     def: "",
@@ -191,7 +192,7 @@ class AiAssistant extends utils.Adapter {
                     name: "Raw response",
                     desc: `Raw response for model${modelName}`,
                     type: "string",
-                    role: "indicator",
+                    role: "json",
                     read: true,
                     write: false,
                     def: "",
@@ -205,7 +206,7 @@ class AiAssistant extends utils.Adapter {
                     name: "Error response",
                     desc: `Error response for model${modelName}`,
                     type: "string",
-                    role: "indicator",
+                    role: "text",
                     read: true,
                     write: false,
                     def: "",
@@ -219,7 +220,7 @@ class AiAssistant extends utils.Adapter {
                     name: "Input tokens",
                     desc: `Used input tokens for model${modelName}`,
                     type: "number",
-                    role: "indicator",
+                    role: "state",
                     read: true,
                     write: false,
                     def: 0,
@@ -233,7 +234,7 @@ class AiAssistant extends utils.Adapter {
                     name: "Output tokens",
                     desc: `Used output tokens for model${modelName}`,
                     type: "number",
-                    role: "indicator",
+                    role: "state",
                     read: true,
                     write: false,
                     def: 0,
@@ -247,7 +248,7 @@ class AiAssistant extends utils.Adapter {
                     name: "Count requests",
                     desc: `Count of requests for model${modelName}`,
                     type: "number",
-                    role: "indicator",
+                    role: "state",
                     read: true,
                     write: false,
                     def: 0,
@@ -261,7 +262,7 @@ class AiAssistant extends utils.Adapter {
                     name: "Last request",
                     desc: `Last request for model${modelName}`,
                     type: "string",
-                    role: "indicator",
+                    role: "date",
                     read: true,
                     write: false,
                     def: "",
@@ -302,7 +303,7 @@ class AiAssistant extends utils.Adapter {
         });
 
         await this.setObjectAsync("Assistant.statistics", {
-            type: "device",
+            type: "folder",
             common: {
                 name: "Statistics",
                 desc: "Statistics for the Assistant like requests count, tokens used, etc.",
@@ -311,7 +312,7 @@ class AiAssistant extends utils.Adapter {
         });
 
         await this.setObjectAsync("Assistant.response", {
-            type: "device",
+            type: "folder",
             common: {
                 name: "Response data",
                 desc: "Response data for the Assistant like raw response, error response, etc.",
@@ -320,7 +321,7 @@ class AiAssistant extends utils.Adapter {
         });
 
         await this.setObjectAsync("Assistant.request", {
-            type: "device",
+            type: "folder",
             common: {
                 name: "Request data",
                 desc: "Request data for the Assistant like request body, state, etc.",
@@ -334,7 +335,7 @@ class AiAssistant extends utils.Adapter {
                 name: "Previous messages",
                 desc: "Previous messages for the Assistant",
                 type: "string",
-                role: "text",
+                role: "json",
                 read: true,
                 write: false,
                 def: '{"messages": []}',
@@ -349,7 +350,7 @@ class AiAssistant extends utils.Adapter {
                 desc: "Clear previous message history for the Assistant",
                 type: "boolean",
                 role: "button",
-                read: true,
+                read: false,
                 write: true,
                 def: true,
             },
@@ -362,7 +363,7 @@ class AiAssistant extends utils.Adapter {
                 name: "State",
                 desc: "State for the running inference request",
                 type: "string",
-                role: "indicator",
+                role: "text",
                 read: true,
                 write: false,
                 def: "",
@@ -376,7 +377,7 @@ class AiAssistant extends utils.Adapter {
                 name: "Request body",
                 desc: "Sent body for the running inference request",
                 type: "string",
-                role: "indicator",
+                role: "json",
                 read: true,
                 write: false,
                 def: "",
@@ -390,7 +391,7 @@ class AiAssistant extends utils.Adapter {
                 name: "Response Raw",
                 desc: "Raw response from Assistant",
                 type: "string",
-                role: "indicator",
+                role: "json",
                 read: true,
                 write: false,
                 def: "",
@@ -404,7 +405,7 @@ class AiAssistant extends utils.Adapter {
                 name: "Error response",
                 desc: "Error response from Assistant",
                 type: "string",
-                role: "indicator",
+                role: "text",
                 read: true,
                 write: false,
                 def: "",
@@ -418,7 +419,7 @@ class AiAssistant extends utils.Adapter {
                 name: "Input tokens",
                 desc: "Used input tokens for Assistant",
                 type: "number",
-                role: "indicator",
+                role: "state",
                 read: true,
                 write: false,
                 def: 0,
@@ -432,7 +433,7 @@ class AiAssistant extends utils.Adapter {
                 name: "Output tokens",
                 desc: "Used output tokens for Assistant",
                 type: "number",
-                role: "indicator",
+                role: "state",
                 read: true,
                 write: false,
                 def: 0,
@@ -446,7 +447,7 @@ class AiAssistant extends utils.Adapter {
                 name: "Requests count",
                 desc: "Count of requests for Assistant",
                 type: "number",
-                role: "indicator",
+                role: "state",
                 read: true,
                 write: false,
                 def: 0,
@@ -460,7 +461,7 @@ class AiAssistant extends utils.Adapter {
                 name: "Last request",
                 desc: "Last request for Assistant",
                 type: "string",
-                role: "indicator",
+                role: "date",
                 read: true,
                 write: false,
                 def: "",
@@ -481,7 +482,7 @@ class AiAssistant extends utils.Adapter {
     onUnload(callback) {
         try {
             for (const timeout of this.timeouts) {
-                clearTimeout(timeout);
+                this.clearTimeout(timeout);
             }
             callback();
         } catch (e) {
@@ -497,10 +498,12 @@ class AiAssistant extends utils.Adapter {
      * @param state - The new state.
      */
     async onStateChange(id, state) {
+        // Only handle state changes if they are not acknowledged
+        if (state && state.ack !== false) {
+            return;
+        }
         if (state) {
             // The state was changed
-            //this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-
             if (id.includes(".clear_messages") && state.val) {
                 await this.clearHistory();
             }
@@ -627,6 +630,7 @@ class AiAssistant extends utils.Adapter {
                             val: JSON.stringify(modelResponse.responseData),
                             ack: true,
                         });
+                        requestCompleted = false;
                     }
                 } else {
                     this.log.warn("Assistant response text is empty, cant handle response!");
@@ -1089,7 +1093,7 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
                 val: I18n.translate("assistant_function_delete_history_success"),
                 ack: true,
             });
-            setTimeout(async () => {
+            this.setTimeout(async () => {
                 await this.clearHistory();
             }, 3000);
             return null;
@@ -1265,20 +1269,35 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
      */
     getAvailableModels() {
         const models = [];
-        for (const model of this.config.anth_models) {
-            models.push({ label: model.model_name, value: model.model_name });
+        if (this.config.anth_models) {
+            for (const model of this.config.anth_models) {
+                models.push({ label: `(Anthropic) ${model.model_name}`, value: model.model_name });
+            }
         }
-        for (const model of this.config.opai_models) {
-            models.push({ label: model.model_name, value: model.model_name });
+        if (this.config.opai_models) {
+            for (const model of this.config.opai_models) {
+                models.push({ label: `(OpenAI) ${model.model_name}`, value: model.model_name });
+            }
         }
-        for (const model of this.config.custom_models) {
-            models.push({ label: model.model_name, value: model.model_name });
+        if (this.config.custom_models) {
+            for (const model of this.config.custom_models) {
+                models.push({ label: `(Custom) ${model.model_name}`, value: model.model_name });
+            }
         }
-        for (const model of this.config.pplx_models) {
-            models.push({ label: model.model_name, value: model.model_name });
+        if (this.config.pplx_models) {
+            for (const model of this.config.pplx_models) {
+                models.push({ label: `(Perplexity) ${model.model_name}`, value: model.model_name });
+            }
         }
-        for (const model of this.config.oprt_models) {
-            models.push({ label: model.model_name, value: model.model_name });
+        if (this.config.oprt_models) {
+            for (const model of this.config.oprt_models) {
+                models.push({ label: `(OpenRouter) ${model.model_name}`, value: model.model_name });
+            }
+        }
+        if (this.config.deep_models) {
+            for (const model of this.config.deep_models) {
+                models.push({ label: `(Deepseek) ${model.model_name}`, value: model.model_name });
+            }
         }
         return models;
     }
@@ -1296,9 +1315,10 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
         const opai_models = this.config.opai_models;
         const pplx_models = this.config.pplx_models;
         const oprt_models = this.config.oprt_models;
+        const deep_models = this.config.deep_models;
         const custom_models = this.config.custom_models;
 
-        if (anth_models.length > 0) {
+        if (anth_models) {
             for (const model of anth_models) {
                 if (model.model_name == requestedModel && model.model_active) {
                     this.log.debug(`Provider for Model ${model.model_name} is Anthropic`);
@@ -1307,7 +1327,7 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
             }
         }
 
-        if (opai_models.length > 0) {
+        if (opai_models) {
             for (const model of opai_models) {
                 if (model.model_name == requestedModel && model.model_active) {
                     this.log.debug(`Provider for Model ${model.model_name} is OpenAI`);
@@ -1316,7 +1336,7 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
             }
         }
 
-        if (custom_models.length > 0) {
+        if (custom_models) {
             for (const model of custom_models) {
                 if (model.model_name == requestedModel && model.model_active) {
                     this.log.debug(`Provider for Model ${model.model_name} is Custom/Selfhosted`);
@@ -1325,7 +1345,7 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
             }
         }
 
-        if (pplx_models.length > 0) {
+        if (pplx_models) {
             for (const model of pplx_models) {
                 if (model.model_name == requestedModel && model.model_active) {
                     this.log.debug(`Provider for Model ${model.model_name} is Perplexity`);
@@ -1334,11 +1354,20 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
             }
         }
 
-        if (oprt_models.length > 0) {
+        if (oprt_models) {
             for (const model of oprt_models) {
                 if (model.model_name == requestedModel && model.model_active) {
                     this.log.debug(`Provider for Model ${model.model_name} is OpenRouter`);
                     return new OpenRouterAiProvider(this);
+                }
+            }
+        }
+
+        if (deep_models) {
+            for (const model of deep_models) {
+                if (model.model_name == requestedModel && model.model_active) {
+                    this.log.debug(`Provider for Model ${model.model_name} is Deepseek`);
+                    return new DeepseekAiProvider(this);
                 }
             }
         }
