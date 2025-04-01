@@ -1066,28 +1066,28 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
      * @returns - Returns the result of the function call.
      */
     async tryToExecuteFunctionCall(functionCall, functionInstruction) {
-        if (functionCall == "states") {
+        if (functionCall === "states") {
             this.log.info(`States function call detected: ${functionInstruction}`);
             const toolFunction = new StatesTool(this);
             const toolResult = await toolFunction.request(functionInstruction);
             return toolResult;
         }
 
-        if (functionCall == "scheduler") {
+        if (functionCall === "scheduler") {
             this.log.info(`Scheduler function call detected: ${functionInstruction}`);
             const toolFunction = this.scheduler;
             const toolResult = await toolFunction.request(functionInstruction);
             return toolResult;
         }
 
-        if (functionCall == "trigger") {
+        if (functionCall === "trigger") {
             this.log.info(`Trigger function call detected: ${functionInstruction}`);
             const toolFunction = this.trigger;
             const toolResult = await toolFunction.request(functionInstruction);
             return toolResult;
         }
 
-        if (functionCall == "deleteHistory") {
+        if (functionCall === "deleteHistory") {
             this.log.info(`Delete history call detected: ${functionInstruction}`);
             await this.setStateAsync("Assistant.text_response", {
                 val: I18n.translate("assistant_function_delete_history_success"),
@@ -1100,11 +1100,11 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
         }
 
         for (const customFunction of this.config.available_functions) {
-            if (functionCall == customFunction.name) {
+            if (functionCall === customFunction.name) {
                 this.log.info(`Custom function call detected: ${customFunction.name}`);
                 const result = await this.tryToExecuteCustomFunctionCall(customFunction, functionInstruction);
                 const toolResult = {
-                    type: "toolReponse",
+                    type: "toolResponse",
                     tool: customFunction.name,
                     noticeToAssistant: I18n.translate("assistant_function_executed"),
                     result: result,
@@ -1376,6 +1376,13 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
         return null;
     }
 
+    getText(word) {
+        if (typeof word === "string") {
+            return word;
+        }
+        return word[this.config.assistant_language] || word.en;
+    }
+
     /**
      * Retrieves the datapoints from enums and adds them to the available endpoints.
      *
@@ -1392,20 +1399,20 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
         }
         for (const [roomKey] of Object.entries(sorting[enumType])) {
             const room = sorting[enumType][roomKey];
-            const sortObject = { name: room.common.name, endpoints: [] };
+            const sortObject = { name: this.getText(room.common.name), endpoints: [] };
             if (!room.common.members) {
                 continue;
             }
             for (const member of room.common.members) {
                 const enumMember = await this.getForeignObjectAsync(member);
                 if (enumMember) {
-                    if (enumMember.type != "state") {
+                    if (enumMember.type !== "state") {
                         this.log.debug(`Skipping non-state object: ${member}`);
                         continue;
                     }
 
                     const tempObject = {
-                        name: enumMember.common.name,
+                        name: this.getText(enumMember.common.name),
                         id: member,
                     };
 
@@ -1437,12 +1444,12 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
             const stateObject = await this.getForeignObjectAsync(endpoint.objId);
 
             if (stateObject) {
-                if (stateObject.type != "state") {
+                if (stateObject.type !== "state") {
                     continue;
                 }
 
                 const tempObject = {
-                    name: endpoint.name,
+                    name: this.getText(endpoint.name),
                     id: endpoint.objId,
                     type: stateObject.common.type,
                 };
@@ -1450,8 +1457,8 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
                 tempObject.write = stateObject.common.write;
                 tempObject.read = stateObject.common.read;
 
-                if (stateObject.common.type == "number") {
-                    if (stateObject.common.unit != undefined && stateObject.common.unit.trim() != "") {
+                if (stateObject.common.type === "number") {
+                    if (stateObject.common.unit != undefined && stateObject.common.unit.trim()) {
                         tempObject.unit = stateObject.common.unit;
                     }
                     if (stateObject.common.max != undefined && stateObject.common.max != null) {
@@ -1491,7 +1498,7 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
                 const objects = [];
                 for (const sortEnum of enumImport) {
                     for (const endpoint of sortEnum.endpoints) {
-                        objects.push({ active: true, sort: sortEnum.name, name: endpoint.name, objId: endpoint.id });
+                        objects.push({ active: true, sort: this.getText(sortEnum.name), name: this.getText(endpoint.name), objId: endpoint.id });
                     }
                 }
 
