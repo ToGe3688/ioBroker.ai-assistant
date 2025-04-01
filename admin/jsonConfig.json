@@ -39,7 +39,9 @@
                     "lg": 6,
                     "xl": 6,
                     "type": "selectSendTo",
-                    "data": { "function": "getAvailableModels" },
+                    "data": {
+                        "function": "getAvailableModels"
+                    },
                     "command": "getAvailableModels",
                     "label": "Model",
                     "tooltip": "Which Model should be used"
@@ -213,7 +215,9 @@
                     "lg": 12,
                     "xl": 12,
                     "type": "sendTo",
-                    "data": { "function": "importFromEnums" },
+                    "data": {
+                        "function": "importFromEnums"
+                    },
                     "command": "importFromEnums",
                     "label": "Import objects from enum.rooms",
                     "tooltip": "Import objects from enum.rooms",
@@ -360,6 +364,7 @@
         "tab_3": {
             "type": "panel",
             "label": "Anthropic",
+            "hidden": "!data.assistant_model.startsWith('claude-')",
             "items": {
                 "deviderTxt1": {
                     "type": "staticText",
@@ -450,6 +455,7 @@
         "tab_4": {
             "type": "panel",
             "label": "OpenAI",
+            "hidden": "!data.assistant_model.startsWith('gpt-') && !data.assistant_model.startsWith('o1-')",
             "items": {
                 "deviderTxt1": {
                     "type": "staticText",
@@ -530,6 +536,7 @@
         "tab_5": {
             "type": "panel",
             "label": "Perplexity",
+            "hidden": "!data.assistant_model.startsWith('llama-')",
             "items": {
                 "deviderTxt1": {
                     "type": "staticText",
@@ -610,6 +617,7 @@
         "tab_6": {
             "type": "panel",
             "label": "Openrouter",
+            "hidden": "!data.assistant_model.includes('/')",
             "items": {
                 "deviderTxt1": {
                     "type": "staticText",
@@ -688,84 +696,85 @@
             }
         },
         "tab_7": {
-        "type": "panel",
-        "label": "Deepseek",
-        "items": {
-            "deviderTxt1": {
-            "type": "staticText",
-            "text": "Please enter your Deepseek API Token to start using the models. If there are new models released you can simply add them in the table to start using them with ai assistants.",
-            "newLine": true,
-            "xs": 12,
-            "sm": 12,
-            "md": 12,
-            "lg": 12,
-            "xl": 12
-            },
-            "dividerHdr": {
-            "newLine": true,
-            "type": "header",
-            "text": "Settings",
-            "size": 2
-            },
-            "deep_api_token": {
-            "type": "password",
-            "label": "API Token",
-            "xs": 12,
-            "sm": 12,
-            "md": 6,
-            "lg": 4,
-            "xl": 4
-            },
-            "model_name_unique_error": {
-            "type": "staticText",
-            "text": "ERROR: column 'Model' must contain unique text",
-            "newLine": true,
-            "hidden": "const x={}; for(let ii=0; data.pplx_models && ii<data.pplx_models.length; ii++){const t=data.pplx_models[ii].model_name; if (x[t]==='x') return false; x[t]='x';}; return true;",
-            "validator": "const x={}; for(let ii=0; data.pplx_models && ii<data.pplx_models.length; ii++){const t=data.pplx_models[ii].model_name; if (x[t]==='x') return false; x[t]='x';}; return true;",
-            "validatorNoSaveOnError": true,
-            "style": {
-                "color": "red"
-            },
-            "xs": 12,
-            "sm": 12,
-            "md": 12,
-            "lg": 6,
-            "xl": 6
-            },
-            "deep_models": {
-            "type": "table",
-            "newLine": true,
-            "xs": 12,
-            "sm": 12,
-            "md": 12,
-            "lg": 12,
-            "xl": 12,
-            "label": "Models",
-            "showSecondAddAt": 5,
-            "items": [
-                {
-                "type": "checkbox",
-                "attr": "model_active",
-                "width": "10% ",
-                "title": "Active",
-                "tooltip": "Model is active",
-                "filter": true,
-                "sort": true,
-                "default": true
+            "type": "panel",
+            "label": "Deepseek",
+            "hidden": "!data.assistant_model.startsWith('deepseek-')",
+            "items": {
+                "deviderTxt1": {
+                    "type": "staticText",
+                    "text": "Please enter your Deepseek API Token to start using the models. If there are new models released you can simply add them in the table to start using them with ai assistants.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
-                {
-                "type": "text",
-                "attr": "model_name",
-                "width": "90% ",
-                "title": "Model",
-                "tooltip": "Name of the Model",
-                "filter": true,
-                "sort": true,
-                "default": ""
+                "dividerHdr": {
+                    "newLine": true,
+                    "type": "header",
+                    "text": "Settings",
+                    "size": 2
+                },
+                "deep_api_token": {
+                    "type": "password",
+                    "label": "API Token",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
+                },
+                "model_name_unique_error": {
+                    "type": "staticText",
+                    "text": "ERROR: column 'Model' must contain unique text",
+                    "newLine": true,
+                    "hidden": "const x={}; for(let ii=0; data.pplx_models && ii<data.pplx_models.length; ii++){const t=data.pplx_models[ii].model_name; if (x[t]==='x') return false; x[t]='x';}; return true;",
+                    "validator": "const x={}; for(let ii=0; data.pplx_models && ii<data.pplx_models.length; ii++){const t=data.pplx_models[ii].model_name; if (x[t]==='x') return false; x[t]='x';}; return true;",
+                    "validatorNoSaveOnError": true,
+                    "style": {
+                        "color": "red"
+                    },
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 6,
+                    "xl": 6
+                },
+                "deep_models": {
+                    "type": "table",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
+                    "label": "Models",
+                    "showSecondAddAt": 5,
+                    "items": [
+                        {
+                            "type": "checkbox",
+                            "attr": "model_active",
+                            "width": "10% ",
+                            "title": "Active",
+                            "tooltip": "Model is active",
+                            "filter": true,
+                            "sort": true,
+                            "default": true
+                        },
+                        {
+                            "type": "text",
+                            "attr": "model_name",
+                            "width": "90% ",
+                            "title": "Model",
+                            "tooltip": "Name of the Model",
+                            "filter": true,
+                            "sort": true,
+                            "default": ""
+                        }
+                    ]
                 }
-            ]
             }
-        }
         },
         "tab_8": {
             "type": "panel",
@@ -876,6 +885,44 @@
                             "default": ""
                         }
                     ]
+                }
+            }
+        },
+        "test": {
+            "type": "panel",
+            "label": "Test",
+            "items": {
+                "_instruction": {
+                    "type": "staticText",
+                    "label": "Save the configuration first",
+                    "newLine": true,
+                    "sm": 12,
+                    "sx": 12
+                },
+                "_question": {
+                    "type": "state",
+                    "label": "Question",
+                    "control": "input",
+                    "addColon": true,
+                    "readOnly": false,
+                    "oid": "Assistant.text_request",
+                    "newLine": true,
+                    "showEnterButton": "Ask",
+                    "setOnEnterKey": true,
+                    "sm": 12,
+                    "sx": 12
+                },
+                "_response": {
+                    "type": "state",
+                    "oid": "Assistant.text_response",
+                    "blinkOnUpdate": true,
+                    "narrow": true,
+                    "addColon": true,
+                    "readOnly": true,
+                    "label": "Last answer",
+                    "newLine": true,
+                    "sm": 12,
+                    "sx": 12
                 }
             }
         }
