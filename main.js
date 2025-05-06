@@ -498,20 +498,18 @@ class AiAssistant extends utils.Adapter {
      * @param state - The new state.
      */
     async onStateChange(id, state) {
-        // Only handle state changes if they are not acknowledged
-        if (state && state.ack !== false) {
-            return;
-        }
         if (state) {
             // The state was changed
-            if (id.includes(".clear_messages") && state.val) {
+            if (id.includes(".clear_messages") && state.val && state.ack == false) {
                 await this.clearHistory();
+                return;
             }
 
-            if (id.includes("Assistant.") && id.includes(".text_request") && state.val) {
+            if (id.includes("Assistant.") && id.includes(".text_request") && state.val && state.ack == false) {
                 this.startAssistantRequest(state.val);
+                return;
             }
-
+            this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
             this.trigger.triggerCheck(id, state.val);
         }
     }
@@ -614,7 +612,7 @@ class AiAssistant extends utils.Adapter {
                     ack: true,
                 });
                 if (modelResponse.text && modelResponse.text.trim() != "") {
-                    modelResponse.text = modelResponse.text.replace(/(\r\n|\n|\r|\t)/gm, "");
+                    //modelResponse.text = modelResponse.text.replace(/(\r\n|\n|\r|\t)/gm, "");
                     this.log.debug(`Assistant response: ${modelResponse.text}`);
                     try {
                         this.handleAssistantResponse(modelResponse.text);
@@ -722,7 +720,8 @@ class AiAssistant extends utils.Adapter {
 
 		`;
         systemPrompt = systemPrompt + (await this.buildFunctionPrompt());
-        return systemPrompt.replace(/(\r\n|\n|\r)/gm, "");
+        //return systemPrompt.replace(/(\r\n|\n|\r)/gm, "");
+        return systemPrompt;
     }
 
     /**
@@ -753,7 +752,8 @@ class AiAssistant extends utils.Adapter {
 
 			${I18n.translate("assistant_function_prompt_4")}
 		`;
-        return functionPrompt.replace(/(\r\n|\n|\r)/gm, "");
+        //return functionPrompt.replace(/(\r\n|\n|\r)/gm, "");
+        return functionPrompt;
     }
 
     /**
@@ -1066,28 +1066,28 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
      * @returns - Returns the result of the function call.
      */
     async tryToExecuteFunctionCall(functionCall, functionInstruction) {
-        if (functionCall == "states") {
+        if (functionCall === "states") {
             this.log.info(`States function call detected: ${functionInstruction}`);
             const toolFunction = new StatesTool(this);
             const toolResult = await toolFunction.request(functionInstruction);
             return toolResult;
         }
 
-        if (functionCall == "scheduler") {
+        if (functionCall === "scheduler") {
             this.log.info(`Scheduler function call detected: ${functionInstruction}`);
             const toolFunction = this.scheduler;
             const toolResult = await toolFunction.request(functionInstruction);
             return toolResult;
         }
 
-        if (functionCall == "trigger") {
+        if (functionCall === "trigger") {
             this.log.info(`Trigger function call detected: ${functionInstruction}`);
             const toolFunction = this.trigger;
             const toolResult = await toolFunction.request(functionInstruction);
             return toolResult;
         }
 
-        if (functionCall == "deleteHistory") {
+        if (functionCall === "deleteHistory") {
             this.log.info(`Delete history call detected: ${functionInstruction}`);
             await this.setStateAsync("Assistant.text_response", {
                 val: I18n.translate("assistant_function_delete_history_success"),
@@ -1100,11 +1100,11 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
         }
 
         for (const customFunction of this.config.available_functions) {
-            if (functionCall == customFunction.name) {
+            if (functionCall === customFunction.name) {
                 this.log.info(`Custom function call detected: ${customFunction.name}`);
                 const result = await this.tryToExecuteCustomFunctionCall(customFunction, functionInstruction);
                 const toolResult = {
-                    type: "toolReponse",
+                    type: "toolResponse",
                     tool: customFunction.name,
                     noticeToAssistant: I18n.translate("assistant_function_executed"),
                     result: result,
@@ -1377,6 +1377,19 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
     }
 
     /**
+     * Retrieves the text for the specified word based on the assistant language.
+     *
+     * @param word - The word to retrieve the text for.
+     * @returns - The text for the specified word.
+     */
+    getText(word) {
+        if (typeof word === "string") {
+            return word;
+        }
+        return word[this.config.assistant_language] || word.en;
+    }
+
+    /**
      * Retrieves the datapoints from enums and adds them to the available endpoints.
      *
      * @param enumType - The enum type to retrieve the endpoints from.
@@ -1392,7 +1405,7 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
         }
         for (const [roomKey] of Object.entries(sorting[enumType])) {
             const room = sorting[enumType][roomKey];
-            const sortObject = { name: room.common.name, endpoints: [] };
+            const sortObject = { name: this.getText(room.common.name), endpoints: [] };
             if (!room.common.members) {
                 continue;
             }
@@ -1405,7 +1418,7 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
                     }
 
                     const tempObject = {
-                        name: enumMember.common.name,
+                        name: this.getText(enumMember.common.name),
                         id: member,
                     };
 
@@ -1437,12 +1450,12 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
             const stateObject = await this.getForeignObjectAsync(endpoint.objId);
 
             if (stateObject) {
-                if (stateObject.type != "state") {
+                if (stateObject.type !== "state") {
                     continue;
                 }
 
                 const tempObject = {
-                    name: endpoint.name,
+                    name: this.getText(endpoint.name),
                     id: endpoint.objId,
                     type: stateObject.common.type,
                 };
@@ -1450,8 +1463,8 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
                 tempObject.write = stateObject.common.write;
                 tempObject.read = stateObject.common.read;
 
-                if (stateObject.common.type == "number") {
-                    if (stateObject.common.unit != undefined && stateObject.common.unit.trim() != "") {
+                if (stateObject.common.type === "number") {
+                    if (stateObject.common.unit != undefined && stateObject.common.unit.trim()) {
                         tempObject.unit = stateObject.common.unit;
                     }
                     if (stateObject.common.max != undefined && stateObject.common.max != null) {
@@ -1491,7 +1504,12 @@ FunctionResultData: ${JSON.stringify(functionResponse.result)}
                 const objects = [];
                 for (const sortEnum of enumImport) {
                     for (const endpoint of sortEnum.endpoints) {
-                        objects.push({ active: true, sort: sortEnum.name, name: endpoint.name, objId: endpoint.id });
+                        objects.push({
+                            active: true,
+                            sort: this.getText(sortEnum.name),
+                            name: this.getText(endpoint.name),
+                            objId: endpoint.id,
+                        });
                     }
                 }
 

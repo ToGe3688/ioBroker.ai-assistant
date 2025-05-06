@@ -150,12 +150,26 @@
                 },
                 "assistant_request_description": {
                     "type": "staticText",
-                    "text": "Select if failed requests to the assistant should be retried and how long to wait between tries.",
+                    "text": "Select if failed requests to the assistant should be retried and how long to wait between tries and how long to wait for a response. If the assistant is not responding you can try to increase the timeout.",
                     "xs": 12,
                     "sm": 12,
                     "md": 12,
                     "lg": 12,
                     "xl": 12
+                },
+                "request_timeout": {
+                    "type": "number",
+                    "xs": 12,
+                    "sm": 4,
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4,
+                    "label": "Timeout (in seconds)",
+                    "tooltip": "How long to wait for a response from the model till it is considered a failed request",
+                    "min": 1,
+                    "max": 300,
+                    "step": 1,
+                    "default": 30
                 },
                 "max_retries": {
                     "type": "number",
@@ -178,7 +192,7 @@
                     "md": 4,
                     "lg": 4,
                     "xl": 4,
-                    "label": "Retry Delay",
+                    "label": "Retry Delay (in seconds)",
                     "tooltip": "How long to wait between retries",
                     "min": 0,
                     "max": 300,

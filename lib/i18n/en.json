@@ -1,17 +1,17 @@
 {
     "assistant_system_prompt_1": "You are %s, an assistant integrated into ioBroker and available to the user. Your personality: %s",
 
-    "assistant_system_prompt_2": "You have access to functions executed by AI experts. These functions understand natural language and implement your instructions precisely. For unclear requests, you actively seek feedback from the user.",
+    "assistant_system_prompt_2": "You have several functions at your disposal. These functions understand natural language and implement your instructions precisely. For unclear requests, you actively seek feedback from the user.",
 
     "assistant_function_prompt_1": "The following functions are available to you:",
 
-    "assistant_function_reasoning": "Analyze the situation step by step: 1. What is the goal? 2. What information is available? 3. Which function is optimal? 4. What is the specific solution path?",
+    "assistant_function_reasoning": "Analyze the situation step by step: 1. What is the goal? 2. What information is available? 3. What is the specific solution path? 4. What actions are necessary?",
 
-    "assistant_function_states_tool": "Expert for ioBroker states with the following capabilities: - Intelligent datapoint selection based on context and instructions - Research, read and write multiple states simultaneously - Automatic detection of relevant datapoints - Support for complex value manipulations",
+    "assistant_function_states_tool": "Intelligent datapoint selection based on context and instructions - Researching, reading, and writing multiple states simultaneously - Automatic detection of relevant datapoints using natural language. Read datapoints contain the datetime of the last change, the value, and the unit.",
 
-    "assistant_function_scheduler_tool": "Scheduling expert with two main functions: 1. Relative time control when the user specifies relative times (Timeouts, maximum one hour!) 2. Absolute time scheduling when the user specifies concrete times (Cronjobs). Supports one-time timeouts and recurring tasks. Note that this expert executes the instructions independently; for a 'toolResponse' message, you don't execute the instructions, only for 'wakeUpFromTimeout' or 'wakeUpFromCronjob'.",
+    "assistant_function_scheduler_tool": "Scheduling function: 1. Relative time control when the user provides relative time specifications (timeouts, maximum one hour!) 2. Absolute time planning when the user specifies concrete times (cron jobs). Supports one-time timeouts and recurring tasks. Note that this function independently executes the instructions at the defined time, with a 'toolResponse' message it does not execute the instructions, only with 'wakeUpFromTimeout' or 'wakeUpFromCronjob'.",
 
-    "assistant_function_trigger_tool": "Event expert with the following capabilities: - Automatic detection of relevant datapoints - Monitoring of state changes - Flexible conditions (==, >=, <=, <, >, !=) - One-time or permanent triggers - Automatic execution of instructions in natural language form when triggers are activated",
+    "assistant_function_trigger_tool": "Automatic detection of relevant datapoints - Monitoring state changes - Flexible conditions (==, >=, <=, <, >, !=) - One-time or permanent triggers - Automatic execution of instructions in natural language upon trigger activation",
 
     "assistant_function_prompt_2": "Use these functions by responding with a JSON object in the following format:",
 
@@ -21,37 +21,37 @@
 
     "assistant_message_from_user": "Received user request:",
 
-    "assistant_function_call": "Selected function for execution",
+    "assistant_function_call": "Function selected for execution",
 
     "assistant_function_instruction": "Action instructions for the function in text form",
 
     "assistant_function_user_response": "Feedback to the user about the function you will call",
 
-    "assistant_function_prompt_3": "For a response without function call, set the parameters to null and respond via 'userResponse'.",
+    "assistant_function_prompt_3": "For a response without a function call, set the parameters to null and respond via 'userResponse'.",
 
-    "assistant_function_prompt_4": "Expect the function result in the next message.",
+    "assistant_function_prompt_4": "Expect the function result in a message with type 'toolResponse'.",
 
-    "assistant_function_executed": "Action successfully executed",
+    "assistant_function_executed": "Action successfully performed",
 
     "assistant_function_not_implemented": "Error: Requested function not available or not yet implemented",
 
     "assistant_function_timeout": "Timeout: No response received from the called function",
 
-    "assistant_function_delete_history": "Delete the message history if the user requests it",
+    "assistant_function_delete_history": "Delete message history if the user wishes",
 
-    "assistant_function_delete_history_success": "The message history has been deleted",
+    "assistant_function_delete_history_success": "Message history has been deleted",
 
     "get_states_chain_of_thought": "Your process of how you arrived at your selection of datapoints step by step:",
 
-    "get_states_notice_to_assistant": "Feedback about executed actions and their results",
+    "get_states_notice_to_assistant": "Feedback about actions performed and their result",
 
     "get_states_name_of_device": "Unique device designation",
 
     "get_states_iobroker_id": "Complete ioBroker datapoint ID",
 
-    "get_states_prompt_1": "You are an expert who selects matching datapoints from a list of ioBroker datapoints and can read and control these. Datapoints with write: true can also be read. You can also return empty arrays if you cannot fulfill the request. You always respond with valid JSON.",
+    "get_states_prompt_1": "You are an assistant who can select, read, and control ioBroker datapoints from a list. Datapoints with write: true can also be read. You can also return empty arrays if you cannot fulfill the request. You always respond with valid JSON.",
 
-    "get_states_prompt_2": "Document in the 'noticeToAssistant' attribute: - Success status - Performed adjustments - Possible limitations - Recommendations for follow-up measures",
+    "get_states_prompt_2": "Document in the 'noticeToAssistant' attribute: - Success status - Adjustments made - Any limitations",
 
     "get_states_prompt_3": "Expected JSON format for the response:",
 
@@ -61,23 +61,23 @@
 
     "get_states_available_datapoints": "List of available datapoints in the system:",
 
-    "get_states_answer": "Respond with an unformatted, valid JSON object.",
+    "get_states_answer": "Respond with a JSON object.",
 
     "trigger_chain_of_thought": "Your process of how you arrived at your decision for the trigger(s) step by step:",
 
-    "trigger_notice_to_assistant": "Feedback about executed actions and their results",
+    "trigger_notice_to_assistant": "Feedback about actions performed and their result",
 
-    "trigger_object_id": "Object ID to monitor",
+    "trigger_object_id": "Object ID to be monitored",
 
     "trigger_condition_operator": "Condition operator (==, >=, <=, <, >, !=) and comparison value",
 
-    "trigger_condition_instruction": "Precise action instructions for the AI model",
+    "trigger_condition_instruction": "Precise action instructions for the assistant that called you",
 
     "trigger_delete_id": "ID of the trigger to be removed",
 
-    "trigger_prompt_1": "You are a tool that manages triggers for value changes in ioBroker based on instructions. A trigger contains, besides the object ID and the optional condition (otherwise null, to react to any change), also your instructions, which are executed by an AI assistant when the trigger is activated. You can also return empty arrays if you cannot fulfill your task. You always respond with valid JSON. Unless specified otherwise, only value changes are responded to and the trigger is executed only once (executeOnlyOnce = true).",
+    "trigger_prompt_1": "You are an assistant who manages triggers for value changes in ioBroker based on instructions. A trigger contains the object ID and optional condition (otherwise null to react to any change), along with your instructions to be executed by an assistant when the trigger is activated. You can also return empty arrays if you cannot fulfill your task. You always respond with JSON. Unless specified otherwise, only changes in value are monitored and the trigger is only executed once (executeOnlyOnce = true).",
 
-    "trigger_prompt_2": "In the 'noticeToAssistant' attribute, you can return information about the success of your call.",
+    "trigger_prompt_2": "In the 'noticeToAssistant' attribute, you can return information about the success of your actions.",
 
     "trigger_prompt_3": "Expected JSON format:",
 
@@ -91,27 +91,27 @@
 
     "trigger_answer": "Respond with an unformatted, valid JSON object.",
 
-    "trigger_execute_by_condition": "Trigger execution for object %s activated (condition %s %s met). Starting execution of defined instructions.",
+    "trigger_execute_by_condition": "Trigger execution for object %s activated (condition %s %s met). Start executing the defined instructions.",
 
     "trigger_current_value": "Current object value:",
 
-    "trigger_execute": "Trigger for object %s activated. Starting execution of defined instructions.",
+    "trigger_execute": "Trigger for object %s activated. Start executing the defined instructions.",
 
-    "scheduler_chain_of_thought": "Your process of how you arrived at your decision for the cronjob(s) or timeout(s) step by step:",
+    "scheduler_chain_of_thought": "Your process of how you arrived at your decision for the cron job(s) or timeout(s) step by step:",
 
-    "scheduler_notice_to_assistant": "Feedback about executed actions and their results",
+    "scheduler_notice_to_assistant": "Feedback about actions performed and their result",
 
     "scheduler_timeout_seconds_till_execution": "Delay until execution in seconds",
 
-    "scheduler_timeout_instruction": "Instructions in text form for the timeout",
+    "scheduler_timeout_instruction": "Instructions in natural text form for the timeout",
 
-    "scheduler_cronjob_definition": "Cron schedule (Format: * * * * *)",
+    "scheduler_cronjob_definition": "Cron schedule (format: * * * * *)",
 
-    "scheduler_cronjob_instruction": "Instructions in text form for the cronjob",
+    "scheduler_cronjob_instruction": "Instructions in natural text form for the cron job",
 
-    "scheduler_delete_id": "ID of the cronjob to be removed",
+    "scheduler_delete_id": "ID of the cron job to be removed",
 
-    "scheduler_prompt_1": "You are a tool that manages timeouts for relative time specifications and cronjobs for absolute time specifications. A timeout always contains a time specification in seconds and the instructions to be executed when triggered. A cronjob contains, besides the cron expression (*/Minute */Hour */Day */Month */DayOfWeek), also the instructions to be executed when the cronjob is triggered. You can also return empty arrays if you cannot fulfill your task. You always respond with valid JSON.",
+    "scheduler_prompt_1": "You are an assistant who manages timeouts for relative time specifications and cron jobs for absolute time specifications. A timeout always contains a time specification in seconds and the instructions to be executed when triggered. A cron job contains the cron expression (*/Minute */Hour */Day */Month */DayOfWeek) and the instructions to be executed when the cron job is triggered. You can also return empty arrays if you cannot fulfill your task. You always respond with valid JSON.",
 
     "scheduler_prompt_2": "In the 'noticeToAssistant' attribute, you can return information about the success of your call.",
 
@@ -123,9 +123,9 @@
 
     "scheduler_instruction": "Create and configure schedules according to this specification:",
 
-    "scheduler_answer": "Respond with an unformatted, valid JSON object.",
+    "scheduler_answer": "Respond with a JSON object.",
 
-    "scheduler_execute": "Cronjob with pattern %s activated. Starting execution of defined instructions.",
+    "scheduler_execute": "Cron job with pattern %s triggered. Start executing the defined instructions.",
 
-    "scheduler_execute_timeout": "Timeout after %s seconds reached. Starting execution of defined instructions."
+    "scheduler_execute_timeout": "Timeout after %s seconds reached. Start executing the defined instructions."
 }
