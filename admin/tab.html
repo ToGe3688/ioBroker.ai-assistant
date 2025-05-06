@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <!-- Load ioBroker scripts and styles -->
+        <link rel="stylesheet" type="text/css" href="../../lib/css/fancytree/ui.fancytree.min.css" />
+        <link rel="stylesheet" type="text/css" href="../../css/adapter.css" />
+        <link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
+
+        <script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+
+        <script type="text/javascript" src="../../lib/js/materialize.js"></script>
+        <script type="text/javascript" src="../../lib/js/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="../../lib/js/jquery.fancytree-all.min.js"></script>
+
+        <script type="text/javascript" src="../../js/translate.js"></script>
+        <script type="text/javascript" src="words.js"></script>
+
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/showdown@2.0.3/dist/showdown.min.js"></script>
+        
+        <script type="text/javascript">
+            var converter = new showdown.Converter();
+
+            let hideReasoning = true;
+            let hideSystem = true;
+
+            var socket = io.connect();
+
+            socket.on('connect', function() {
+                console.log('Connected to ioBroker');
+                loadMessages();
+            });
+
+            socket.emit('subscribeStates', 'ai-assistant.0.Assistant.*', function(err, state) {
+                if (err) {
+                    console.error('Error subscribing to state:', err);
+                } else {
+                    console.log('Subscribed to state:', state);
+                }
+            });
+
+            socket.on('stateChange', function(id, state) {
+                if (id === 'ai-assistant.0.Assistant.statistics.messages' && state && state.val) {
+                    $('.typing-indicator').remove();
+                    loadMessages();
+                }
+                if (id === 'ai-assistant.0.Assistant.response.error' && state && state.val) {
+                    console.error('Error in response:', state.val);
+                    alert('Error in response: ' + state.val);
+                    $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+                }
+            });
+
+            function getState(id, callback) {
+                socket.emit('getState', id, function(err, state) {
+                    if (err) {
+                        console.error('Error getting state:', err);
+                    } else {
+                        callback(state);
+                    }
+                });
+            }
+
+            function setState(id, value, callback) {
+                socket.emit('setState', id, value, function(err) {
+                    if (err) {
+                        console.error('Error setting state:', err);
+                    } else {
+                        callback();
+                    }
+                });
+            }
+
+            function loadMessages() {
+                getState('ai-assistant.0.Assistant.statistics.messages', function(state) {
+                    if (state) {
+                        $('#messages').html('');
+                        let messagePairs = [];
+                        try {
+                            messagePairs = JSON.parse(state.val);
+                        } catch(err) {
+                            console.error('Error parsing messages:', err);
+                        }
+                        console.log('Messages:', messagePairs.messages);
+                        messagePairs.messages.forEach(messagePair => {
+                            messagePair.timestamp = new Date(messagePair.timestamp).toLocaleString();
+
+                            let userMessage = messagePair.user;
+                            try {
+                                userMessage = JSON.parse(userMessage);
+                            } catch(err) {
+                                //console.error('Error parsing user message:', err);
+                            }
+
+                            if (typeof userMessage === 'object') {
+                                if (userMessage.type && userMessage.noticeToAssistant) {
+                                    $('#messages').append('<div class="message system"><div class="content">' + userMessage.noticeToAssistant + '</div></div>');
+                                }
+                                if (userMessage.type && userMessage.prompt) {
+                                    $('#messages').append('<div class="message system"><div class="content">' + userMessage.prompt + '</div></div>');
+                                } 
+                            } else {
+                                $('#messages').append('<div class="message user"><div class="content">' + converter.makeHtml(messagePair.user) + '</div><div class="break"></div><div class="timestamp">' + messagePair.timestamp + '</div></div>');
+                            }
+                            
+                            let assistantResponse = null;
+                            try {
+                                assistantResponse = JSON.parse(messagePair.assistant);
+                            } catch(err) {
+                                console.error('Error parsing assistant response:', err);
+                            }
+                            if (assistantResponse) {
+                                if (assistantResponse.reasoning) {
+                                    $('#messages').append('<div class="message reasoning"><div class="content">' + converter.makeHtml(assistantResponse.reasoning) + '</div></div>');
+                                }
+                                $('#messages').append('<div class="message assistant"><div class="content">' + converter.makeHtml(assistantResponse.userResponse) + '</div><div class="break"></div><div class="timestamp">' + messagePair.timestamp + '</div></div>');
+                            }
+
+                        });
+                        if (hideReasoning) {
+                            $('.message.reasoning').hide();
+                        } else {
+                            $('.message.reasoning').show();
+                        }
+                        if (hideSystem) {
+                            $('.message.system').hide();
+                        } else {
+                            $('.message.system').show();
+                        }
+                        $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+                    }
+                });
+            }
+        </script>
+        <title>AI Assistant</title>
+    </head>
+    <body>
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <div id="root">
+            <div class="chat-container">
+                <div id="chat-window" class="chat-window">
+                    <div id="messages" class="messages"></div>
+                </div>
+                <div class="input-container">
+                    <input type="text" id="chat-input" placeholder="Type your message here..." />
+                    <button id="send-button" class="button"><i class="material-icons md-20">chat</i> Send</button>
+                    <button id="settings-button" class="button settings"><i class="material-icons md-20">settings</i></button>
+                </div>
+            </div>
+
+            <!-- Settings Modal -->
+            <div id="settings-modal" class="modal">
+                <div class="modal-content">
+                    <h3>Chat Settings</h3>
+                    <p>Show/Hide System and Reasoning in the chat window</p>
+                    <button id="hide-reasoning" class="button settings"><i class="material-icons md-20">visibility_off</i> Reasoning</button>
+                    <button id="hide-system" class="button settings"><i class="material-icons md-20">visibility_off</i> System</button>
+                    <br /><br />
+                    <a id="adapter-settings-link" href="/#tab-instances/config/system.adapter.ai-assistant.0" target="_parent"><button id="hide-system" class="button settings"><i class="material-icons md-20">settings</i> Adapter Settings</button></a>
+                    <button id="delete-history" class="button settings"><i class="material-icons md-20">delete</i> Delete history</button>
+                    <br /><br />
+                    <button class="modal-close button"><i class="material-icons md-20">close</i> Close</button>
+                </div>
+            </div>
+
+            <style>
+                .break {
+                    flex-basis: 100%;
+                    height: 0;
+                }
+
+                .message {
+                    display: flex;
+                    margin-bottom: 10px;
+                    max-width: 60%;
+                    flex-wrap: wrap;
+                }
+
+                .message b {
+                    display: block;
+                    margin-bottom: 5px;
+                }
+
+                .message.user {
+                    align-self: flex-start;
+                }
+
+                .message.user > .content {
+                    padding: 20px;
+                    border-radius: 10px;
+                    background-color: rgb(77, 171, 245);
+                }
+
+                .message.assistant {
+                    align-self: flex-end;
+                }
+
+                .message.assistant > .content {
+                    padding: 20px;
+                    border-radius: 10px;
+                    background-color: #f1f0f0;
+                    width: 100%;
+                }
+
+                .message.system {
+                    align-self: center;
+                    display: none;
+                    opacity: 0.5;
+                }
+
+                .message.system > .content {
+                    font-size: 0.8em;
+                    font-style: italic;
+                    background-color: #f0f0f0;
+                    padding: 10px;
+                    border-radius: 10px;
+                }
+
+                .message.reasoning {
+                    align-self: flex-end;
+                    opacity: 0.5;
+                    display: none;
+                    width: 100%;
+                }
+
+                .message.reasoning > .content {
+                    padding: 10px;
+                    border-radius: 10px;
+                    background-color: #f1f0f0;
+                    font-style: italic;
+                }
+
+                
+                .message > .timestamp {
+                    font-size: 0.8em;
+                    color: #888;
+                    margin-top: 5px;
+                }
+                
+                .chat-container {
+                    display: flex;
+                    flex-direction: column;
+                    height: 100vh;
+                }
+                .chat-window {
+                    flex: 1;
+                    overflow-y: auto;
+                    padding: 10px;
+                }
+                .messages {
+                    display: flex;
+                    flex-direction: column;
+                }
+                .input-container {
+                    display: flex;
+                    border-top: 1px solid #ccc;
+                    padding: 10px;
+                }
+                #chat-input {
+                    flex: 1;
+                    padding: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                }
+                #send-button {
+                    margin-left: 10px;
+                    padding: 10px 20px;
+                    border: none;
+                    background-color: #007bff;
+                    color: white;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+                .button {
+                    margin-left: 10px;
+                    padding: 10px 20px;
+                    border: none;
+                    background-color: #007bff;
+                    color: white;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+                .button.settings {
+                    background-color: #333 
+                }
+                .button > i {
+                    vertical-align: middle;
+                    font-size:20px;
+                }
+                .modal {
+                    display: none;
+                    position: fixed;
+                    z-index: 1;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: auto;
+                    background-color: rgb(0,0,0);
+                    background-color: rgba(0,0,0,0.4);
+                    padding-top: 60px;
+                }
+                .modal-content {
+                    background-color: #fefefe;
+                    margin: 5% auto;
+                    padding: 20px;
+                    border: 1px solid #888;
+                    width: 80%;
+                }
+            </style>
+
+            <script>
+                $(document).ready(function() {
+
+                    $('#send-button').click(function() {
+                        sendMessage();
+                    });
+
+                    $('#settings-button').click(function() {
+                        $('#settings-modal').show();
+                    });
+
+                    $('.modal-close').click(function() {
+                        $('#settings-modal').hide();
+                    });
+
+                    $('#delete-history').click(function() {
+                        if (confirm('Are you sure you want to delete the chat history?')) {
+                            setState('ai-assistant.0.Assistant.statistics.clear_messages', true, function() {
+                                console.log('Chat history deleted');
+                            });
+                        }
+                    });
+
+                    $('#hide-reasoning').click(function() {
+                        $('.message.reasoning').toggle();
+                        $('#hide-reasoning').html(hideReasoning ? '<i class="material-icons md-20">visibility</i> Reasoning' : '<i class="material-icons md-20">visibility_off</i> Reasoning');
+                        $('#hide-reasoning').toggleClass('settings');
+                        $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+                        if ($('.message.reasoning').is(':visible')) {
+                            hideReasoning = false;
+                        } else {
+                            hideReasoning = true;
+                        }
+                    });
+
+                    $('#hide-system').click(function() {
+                        $('.message.system').toggle();
+                        $('#hide-system').html(hideSystem ? '<i class="material-icons md-20">visibility</i> System' : '<i class="material-icons md-20">visibility_off</i> System');
+                        $('#hide-system').toggleClass('settings');
+                        $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+                        if ($('.message.system').is(':visible')) {
+                            hideSystem = false;
+                        } else {
+                            hideSystem = true;
+                        }
+                    });
+
+                    $('#chat-input').keypress(function(e) {
+                        if (e.which == 13) {
+                            sendMessage();
+                        }
+                    });
+
+                    function sendMessage() {
+                        var message = $('#chat-input').val();
+                        var datetime = new Date().toISOString();
+                        if (message.trim() !== '') {
+                            $('#messages').append('<div class="message user"><div class="content"><p>' + message + '</p></div><div class="break"></div><div class="timestamp">' + datetime + '</div></div>');
+                            $('#chat-input').val('');
+                            $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+                            // Here you would add the code to send the message to the AI assistant and display the response
+                            setState('ai-assistant.0.Assistant.text_request', message, function() {
+                                console.log('Message sent to state:', message);
+                            });
+                            $('#messages').append('<div class="message assistant typing-indicator"><div class="content">...</div></div>');
+                            $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </body>
+</html>
