@@ -185,8 +185,7 @@
                 "pl": "Assistant",
                 "zh-cn": "Assistant"
             },
-            "link": "",
-            "fa-icon": "</i><img style='width:24px;margin-bottom:-6px;' src='/adapter/admin/ai-assistant.png'><i>"
+            "link": ""
         },
         "dependencies": [
             {
