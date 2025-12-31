@@ -270,7 +270,7 @@ Set the log level to `debug` in the ioBroker admin interface for detailed logs.
 
 The MIT License (MIT)
 
-Copyright (c) 2024-2025 ToGe3688 <toge3688@gmail.com>
+Copyright (c) 2024-2026 ToGe3688 <toge3688@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
