@@ -229,6 +229,9 @@ Set the log level to `debug` in the ioBroker admin interface for detailed logs.
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
+
 ### 0.1.4 (2025-06-05)
 * (@ToGe3688) Added tab to interact with the assitant in the admin adapter
 * (@ToGe3688) Added a custom timeout parameter
